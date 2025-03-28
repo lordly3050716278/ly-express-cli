@@ -1,0 +1,32 @@
+{
+  "name": "ly-express-cli",
+  "version": "0.0.0",
+  "description": "创建node api的脚手架",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "node-express": "src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lordly3050716278/ly-express-cli.git"
+  },
+  "keywords": [
+    "lordly",
+    "node",
+    "api",
+    "cli"
+  ],
+  "author": "lordly",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lordly3050716278/ly-express-cli/issues"
+  },
+  "homepage": "https://github.com/lordly3050716278/ly-express-cli#readme",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "fs-extra": "^11.3.0",
+    "inquirer": "^12.5.0"
+  }
+}
