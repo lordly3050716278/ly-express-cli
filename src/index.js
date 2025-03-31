@@ -9,7 +9,7 @@ import { execSync } from 'child_process'
 
 // 指定版本和描述信息
 program
-    .version('0.0.1')
+    .version('0.0.2')
     .description('用于创建 Express + TypeScript 接口项目')
 
 // 初始化一个 Express + TypeScript 项目

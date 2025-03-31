@@ -15,17 +15,20 @@ class HttpResponse {
 
 module.exports = ((req, resp, next) => {
     resp.success = function (msg, data) {
-        this.send(new HttpResponse(200, msg, data))
+        this.body = new HttpResponse(200, msg, data)
+        this.send(this.body)
     }
 
     resp.fail = function (error) {
         console.cliError(error)
-        resp.send(new HttpResponse(400, error.message))
+        this.body = new HttpResponse(400, error.message)
+        this.send(this.body)
     }
 
     resp.authFail = function (error) {
         console.cliError(error)
-        resp.send(new HttpResponse(401, error.message))
+        this.body = new HttpResponse(401, error.message)
+        this.send(this.body)
     }
 
     next()
