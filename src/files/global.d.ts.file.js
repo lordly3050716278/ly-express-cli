@@ -54,6 +54,12 @@ namespace NodeJS {
 
 namespace Express {
     interface Response {
+
+        /**
+         * 响应体
+         */
+        body?: any
+
         /**
         * 发送正确的响应给前端
         * 

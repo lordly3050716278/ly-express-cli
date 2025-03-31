@@ -24,7 +24,7 @@ console.cliLog('解析URL编码的数据')
 app.use(express.urlencoded({ extended: true }))
 
 // 使用日志中间件
-app.use(require('@/middlewares/requestLogger')())
+app.use(require('@/middlewares/requestLogger'))
 // 使用json返回值中间件
 app.use(require('@/middlewares/httpResponse'))
 

@@ -11,10 +11,7 @@ export const buildPackageJsonFile = (projectName) => {
             "cors": "^2.8.5",
             "dayjs": "^1.11.13",
             "dotenv": "^16.4.7",
-            "express": "^4.21.2",
-            "pino": "^9.6.0",
-            "pino-http": "^10.4.0",
-            "pino-pretty": "^13.0.0"
+            "express": "^4.21.2"
         },
         "devDependencies": {
             "@types/cli-color": "^2.0.6",
