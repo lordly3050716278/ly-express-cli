@@ -9,7 +9,7 @@ import { execSync } from 'child_process'
 
 // 指定版本和描述信息
 program
-    .version('0.0.2')
+    .version('0.0.3')
     .description('用于创建 Express + TypeScript 接口项目')
 
 // 初始化一个 Express + TypeScript 项目
@@ -97,7 +97,9 @@ import { loadRoutesFile } from './files/loadRoutes.ts.file.js'
 import { requestLoggerFile } from './files/requestLogger.ts.file.js'
 import { httpResponseFile } from './files/httpResponse.ts.file.js'
 import { loggerFile } from './files/logger.ts.file.js'
-import { globalTypeFile } from './files/global.d.ts.file.js'
+import { consoleTypeFile } from './files/console.d.ts.file.js'
+import { nodeTypeFile } from './files/node.d.ts.file.js'
+import { expressTypeFile } from './files/express.d.ts.file.js'
 import { middlewareTypeFile } from './files/middleware.d.ts.file.js'
 import { exampleRouteFile } from './files/example.ts.file.js'
 
@@ -151,8 +153,14 @@ function createProjectFiles(projectPath, projectName) {
     // src/types
     fs.mkdirSync(path.join(projectPath, "src/types"))
 
-    // src/types/global.d.ts
-    fs.writeFileSync(path.join(projectPath, "src/types/global.d.ts"), globalTypeFile)
+    // src/types/console.d.ts
+    fs.writeFileSync(path.join(projectPath, "src/types/console.d.ts"), consoleTypeFile)
+
+    // src/types/node.d.ts
+    fs.writeFileSync(path.join(projectPath, "src/types/node.d.ts"), nodeTypeFile)
+
+    // src/types/express.d.ts
+    fs.writeFileSync(path.join(projectPath, "src/types/express.d.ts"), expressTypeFile)
 
     // src/types/middleware.d.ts
     fs.writeFileSync(path.join(projectPath, "src/types/middleware.d.ts"), middlewareTypeFile)
