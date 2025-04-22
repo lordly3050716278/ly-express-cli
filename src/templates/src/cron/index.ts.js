@@ -1,0 +1,1 @@
+export const cronTemplate = `import './temp-cleaner'`

@@ -1,4 +1,4 @@
-export const requestLoggerFile = `import type Middleware from '@/types/middleware'
+export const requestLoggerTemplate = `import type Middleware from '@/types/middleware'
 import logger from '@/utils/logger'
 
 module.exports = ((req, resp, next) => {

@@ -1,4 +1,4 @@
-export const httpResponseFile = `import type Middleware from '@/types/middleware'
+export const httpResponseTemplate = `import type Middleware from '@/types/middleware'
 
 class HttpResponse {
     code: number

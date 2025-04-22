@@ -1,4 +1,4 @@
-export const loggerFile = `import fs from 'fs'
+export const loggerTemplate = `import fs from 'fs'
 import path from 'path'
 import dayjs from 'dayjs'
 

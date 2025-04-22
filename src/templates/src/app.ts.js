@@ -1,4 +1,4 @@
-export const appFile = `import express from 'express'
+export const appTemplate = `import express from 'express'
 import cors from 'cors'
 import loadRoutes from './loadRoutes'
 
@@ -23,10 +23,20 @@ app.use(express.json())
 console.cliLog('解析URL编码的数据')
 app.use(express.urlencoded({ extended: true }))
 
+console.cliLog('静态资源服务')
+app.use(process.env.ASSETS_CONTEXT_PATH, require('@/middlewares/refer'), express.static(process.env.ASSETS_PATH))
+
+console.cliLog('临时文件服务')
+app.use(process.env.TEMP_CONTEXT_PATH, express.static(process.env.TEMP_PATH))
+
 // 使用日志中间件
 app.use(require('@/middlewares/requestLogger'))
 // 使用json返回值中间件
 app.use(require('@/middlewares/httpResponse'))
+app.use(require('@/middlewares/requestParamsValidator'))
 
 console.cliLog('自动注册路由')
-loadRoutes(app)`
+loadRoutes(app)
+
+console.cliLog('启动定时任务')
+require('@/cron')`

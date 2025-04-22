@@ -1,4 +1,4 @@
-export const consoleFile = `import clc from 'cli-color'
+export const consoleTemplate = `import clc from 'cli-color'
 
 // 定义颜色和样式
 const logLevelColors = {

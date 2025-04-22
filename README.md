@@ -79,26 +79,6 @@ node-express init
 
 - 如果您希望跳过某些步骤，例如不安装依赖，系统会提供相应的提示，您可以按需执行。
 
-## 创建的项目结构
-
-创建的项目包含以下文件和文件夹：
-
-```
-/project-name
-  ├── /node_modules        # 项目依赖
-  ├── /src                 # 项目源代码
-  │   ├── /middlewares     # 存放中间件
-  │   ├── /utils           # 存放工具函数
-  │   ├── /types           # 存放类型定义
-  │   ├── /routes          # 存放路由
-  │   └── app.ts           # Express 应用的主入口文件
-  ├── package.json         # 项目的基本配置文件
-  ├── tsconfig.json        # TypeScript 配置文件
-  ├── esbuild.js           # 构建配置文件
-  ├── .env.development     # 开发环境变量配置
-  └── .env.production      # 生产环境变量配置
-```
-
 ## 常见问题解答 (FAQ)
 
 1. **如何修改项目配置？**
@@ -115,17 +95,3 @@ node-express init
 
 5. **如何处理环境变量？**
    项目模板包含 `.env.development` 和 `.env.production` 文件。您可以在这些文件中添加需要的环境变量，`dotenv` 会自动加载这些配置。
-
-## 贡献
-
-欢迎对 `ly-express-cli` 提出意见和贡献代码！您可以：
-- 创建 Issue 来反馈问题或建议。
-- 提交 Pull Request，修复 bug 或添加新功能。
-
-## License
-
-该项目采用 MIT 许可证，详情请参阅 [LICENSE](LICENSE) 文件。
-
----
-
-感谢使用 `ly-express-cli`，祝您开发愉快！😊

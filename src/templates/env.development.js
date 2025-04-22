@@ -1,0 +1,9 @@
+export const envDevelopmentTemplate = `# 主机
+HOST=127.0.0.1
+# 数据库
+DB_HOST=your_database_host
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_DATABASE=your_database_name
+# 静态资源路径
+ASSETS_PATH=your_assets_path`

@@ -1,4 +1,4 @@
-export const loadRoutesFile = `import type { Application } from 'express'
+export const loadRoutesTemplate = `import type { Application } from 'express'
 import path from 'path'
 import fs from 'fs'
 

@@ -1,0 +1,10 @@
+export const envTemplate = `# 端口
+PORT=8899
+# 访问上下文
+CONTEXT_PATH=/node-express
+# 邮箱
+MAIL_HOST=your_email_host
+MAIL_USER=your_email_address
+MAIL_PASS=your_email_password
+# 允许访问静态资源的referer
+REFERERS=http://localhost:5173,http://localhost:5174`

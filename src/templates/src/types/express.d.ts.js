@@ -1,4 +1,14 @@
-export const expressTypeFile = `namespace Express {
+export const expressTypeTemplate = `namespace Express {
+    interface Request {
+        /**
+         * 请求参数校验器
+         */
+        paramsValidator<T extends string>(...keys: T[]): {
+            valid: Record<T, any>
+            others: Omit<Record<string, any>, T>
+        }
+    }
+
     interface Response {
 
         /**

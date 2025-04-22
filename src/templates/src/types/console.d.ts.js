@@ -1,4 +1,4 @@
-export const consoleTypeFile = `interface Console {
+export const consoleTypeTemplate = `interface Console {
     /**
      * 输出普通日志信息
      * 

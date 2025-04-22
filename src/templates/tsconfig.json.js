@@ -1,4 +1,4 @@
-export const tsconfigFile = JSON.stringify({
+export const tsconfigTemplate = JSON.stringify({
     "compilerOptions": {
         "target": "ES2024",
         "module": "CommonJS",

@@ -1,4 +1,4 @@
-export const esbuildFile = `const esbuild = require('esbuild')
+export const esbuildTemplate = `const esbuild = require('esbuild')
 const path = require('path')
 const fs = require('fs')
 const pkg = require('./package.json') // 读取 package.json
