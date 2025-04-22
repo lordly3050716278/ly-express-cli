@@ -9,7 +9,7 @@ import { execSync } from 'child_process'
 
 // 指定版本和描述信息
 program
-    .version('0.0.4')
+    .version('0.0.5')
     .description('用于创建 Express + TypeScript 接口项目')
 
 // 初始化一个 Express + TypeScript 项目
@@ -93,10 +93,6 @@ program.command('init')
 
         console.log(chalk.blue(`🚀 启动生产环境：`))
         console.log(chalk.cyan(`npm start`)) // 提示用户启动生产环境
-
-        // 添加用户提示：如何访问示例路由
-        console.log(chalk.green(`✅ 项目启动后，您可以通过以下 URL 访问示例路由：`))
-        console.log(chalk.cyan(`http://localhost:8899/node-express/example`)) // 提示用户访问示例路由
     })
 
 program.parse(process.argv)
