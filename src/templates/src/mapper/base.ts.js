@@ -101,6 +101,8 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
     }
 
     async query(sql: string, ...values: any[]) {
+        sql = sql.replace(/\s+/g, ' ').trim()
+
         // 如果已经在事务中，使用事务连接
         if (BaseMapper.transactionConn) {
             try {
