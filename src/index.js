@@ -12,9 +12,11 @@ import { createPackageJson } from './package.json.js'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const pkg = fs.readJsonSync(path.resolve(__dirname, '../package.json'))
+
 // 指定版本和描述信息
 program
-    .version('1.0.0')
+    .version(pkg.version)
     .description('用于创建 Express + TypeScript 接口项目')
 
 // 初始化一个 Express + TypeScript 项目

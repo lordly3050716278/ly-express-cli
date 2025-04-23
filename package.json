@@ -1,6 +1,6 @@
 {
   "name": "ly-express-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "创建node api的脚手架",
   "main": "src/index.js",
   "type": "module",
