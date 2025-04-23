@@ -1,4 +1,4 @@
-export const consoleTypeTemplate = `interface Console {
+interface Console {
     /**
      * 输出普通日志信息
      * 
@@ -26,4 +26,4 @@ export const consoleTypeTemplate = `interface Console {
      * @param args 警告内容，支持多个参数
      */
     cliSuccess(...args: any[]): void
-}`
+}

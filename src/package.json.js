@@ -1,4 +1,4 @@
-export const getTemplate = (projectName) => {
+export const createPackageJson = (projectName) => {
     return JSON.stringify({
         "name": projectName,
         "scripts": {

@@ -1,4 +1,4 @@
-export const appTemplate = `import express from 'express'
+import express from 'express'
 import cors from 'cors'
 import loadRoutes from './loadRoutes'
 
@@ -11,7 +11,7 @@ const app = express()
 
 console.cliLog('监听端口，开启服务')
 app.listen(process.env.PORT, () => {
-    console.cliSuccess(\`服务已运行在 \${ process.env.PORT } 端口\`)
+    console.cliSuccess(`服务已运行在 ${process.env.PORT} 端口`)
 })
 
 console.cliLog('跨域处理')
@@ -39,4 +39,4 @@ console.cliLog('自动注册路由')
 loadRoutes(app)
 
 console.cliLog('启动定时任务')
-require('@/cron')`
+require('@/cron')

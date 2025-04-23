@@ -1,4 +1,4 @@
-export const nodeTypeTemplate = `namespace NodeJS {
+namespace NodeJS {
     interface ProcessEnv {
         /**
         * 当前环境模式，可选值为 'development' 或 'production'
@@ -90,4 +90,4 @@ export const nodeTypeTemplate = `namespace NodeJS {
          */
         REFERERS: string
     }
-}`
+}

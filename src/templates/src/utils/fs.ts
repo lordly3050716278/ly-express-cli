@@ -1,32 +1,32 @@
-export const fsTemplate = `import fs from 'fs'
+import fs from 'fs'
 
 /**
  * 构建资源文件的可访问url
  * 
  * @param filename 文件名字
  */
-export const buildAssetsUrl = (filename: string) => process.env.ASSETS_URL + '/' + filename
+export const buildAssetsUrl = (filename: string) => filename ? process.env.ASSETS_URL + '/' + filename : ''
 
 /**
  * 构建资源文件的路径path
  * 
  * @param filename 文件名字
  */
-export const buildAssetsPath = (filename: string) => process.env.ASSETS_PATH + '/' + filename
+export const buildAssetsPath = (filename: string) => filename ? process.env.ASSETS_PATH + '/' + filename : ''
 
 /**
  * 构建临时文件的可访问url
  * 
  * @param filename 文件名字
  */
-export const buildTempUrl = (filename: string) => process.env.TEMP_URL + '/' + filename
+export const buildTempUrl = (filename: string) => filename ? process.env.TEMP_URL + '/' + filename : ''
 
 /**
  * 构建临时文件的路径path
  * 
  * @param filename 文件名字
  */
-export const buildTempPath = (filename: string) => process.env.TEMP_PATH + '/' + filename
+export const buildTempPath = (filename: string) => filename ? process.env.TEMP_PATH + '/' + filename : ''
 
 /**
  * 解析资源文件的url
@@ -95,4 +95,4 @@ export const moveTempFileToAssets = (filename: string) => {
     if (!fs.existsSync(tempPath)) return
     fs.copyFileSync(tempPath, assetsPath)
     fs.unlinkSync(tempPath)
-}`
+}

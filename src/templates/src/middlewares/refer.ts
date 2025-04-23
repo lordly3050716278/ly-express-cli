@@ -1,4 +1,4 @@
-export const referTemplate = `import type Middleware from '@/types/middleware'
+import type Middleware from '@/types/middleware'
 
 // 设置允许的 Referer
 const allowedDomains = process.env.REFERERS?.split(',') || []
@@ -14,4 +14,4 @@ module.exports = ((req, resp, next) => {
     }
 
     next()
-}) as Middleware`
+}) as Middleware

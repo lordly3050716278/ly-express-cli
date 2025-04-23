@@ -1,4 +1,4 @@
-export const verifyCodeRouteTemplate = `import { Router } from 'express'
+import { Router } from 'express'
 import { sendVerifyCode } from '@/utils/verifyCode'
 
 const router = Router()
@@ -16,4 +16,4 @@ router.post('/', async (req, resp) => {
     }
 })
 
-export default router`
+export default router

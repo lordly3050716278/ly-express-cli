@@ -1,4 +1,4 @@
-export const esbuildTemplate = `const esbuild = require('esbuild')
+const esbuild = require('esbuild')
 const path = require('path')
 const fs = require('fs')
 const pkg = require('./package.json') // 读取 package.json
@@ -25,7 +25,7 @@ function build() {
         },
         tsconfig: './tsconfig.json',        // 指定 tsconfig 文件
         define: {
-            'process.env.NODE_ENV': \`"production"\` // 注入环境变量
+            'process.env.NODE_ENV': `"production"` // 注入环境变量
         }
     }).then(() => {
         console.log('✅ 构建完成')
@@ -35,4 +35,4 @@ function build() {
     })
 }
 
-build()`
+build()

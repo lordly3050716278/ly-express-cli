@@ -1,4 +1,4 @@
-export const baseMapperTemplate = `import type { PoolConnection, ResultSetHeader } from 'mysql2/promise'
+import type { PoolConnection, ResultSetHeader } from 'mysql2/promise'
 import type { IBaseMapper, WhereCondition } from '@/types/baseMapper'
 import { pool } from '@/utils/mysql'
 import logger from '@/utils/logger'
@@ -106,7 +106,7 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
         // 如果已经在事务中，使用事务连接
         if (BaseMapper.transactionConn) {
             try {
-                logger.log(\`\${sql} [\${values}]\`)
+                logger.log(`${sql} [${values}]`)
                 const [result, fields] = await BaseMapper.transactionConn.query(sql, values)
                 if (!Array.isArray(result)) return result as ResultSetHeader
                 return result.map(snakeObjToCamelObj) as T[]
@@ -119,7 +119,7 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
         await this.connect()
         if (!this.#conn) return []
         try {
-            logger.log(\`\${sql} [\${values}]\`)
+            logger.log(`${sql} [${values}]`)
             const [result, fields] = await this.#conn.query(sql, values)
             if (!Array.isArray(result)) return result as ResultSetHeader
             return result.map(snakeObjToCamelObj) as T[]
@@ -129,8 +129,8 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
     }
 
     async insert(entity: Partial<T>) {
-        const insertClause = \`(\${Object.keys(camelObjToSnakeObj(entity)).join(', ')}) VALUES (\${Object.keys(entity).map(() => '?').join(', ')})\`
-        const sql = \`INSERT INTO \${this.tableName} \${insertClause}\`
+        const insertClause = `(${Object.keys(camelObjToSnakeObj(entity)).join(', ')}) VALUES (${Object.keys(entity).map(() => '?').join(', ')})`
+        const sql = `INSERT INTO ${this.tableName} ${insertClause}`
         const values = [...Object.values(entity)]
 
         const result = await this.query(sql, ...values)
@@ -139,7 +139,7 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
 
     async delete(where?: WhereCondition<T>) {
         const { clause, values } = this.buildWhereClause(where)
-        const sql = \`DELETE FROM \${this.tableName} \${clause}\`
+        const sql = `DELETE FROM ${this.tableName} ${clause}`
         const result = await this.query(sql, ...values)
         return result as ResultSetHeader
     }
@@ -147,9 +147,9 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
     async update(id: number, data: Partial<T>) {
         const snakeData = camelObjToSnakeObj(data)
         const setClause = Object.keys(snakeData)
-            .map(key => \`\${key} = ?\`)
+            .map(key => `${key} = ?`)
             .join(', ')
-        const sql = \`UPDATE \${this.tableName} SET \${setClause} WHERE id = ?\`
+        const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`
         const values = [...Object.values(data), id]
 
         const result = await this.query(sql, ...values)
@@ -161,7 +161,7 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
             ? fields.map(field => camelToSnake(field as string)).join(', ')
             : '*'
         const { clause, values } = this.buildWhereClause(where)
-        const sql = \`SELECT \${fieldList} FROM \${this.tableName} \${clause} ORDER BY \${orderBy}\`
+        const sql = `SELECT ${fieldList} FROM ${this.tableName} ${clause} ORDER BY ${orderBy}`
 
         const result = await this.query(sql, ...values)
         return result as T[]
@@ -172,7 +172,7 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
             ? fields.map(field => camelToSnake(field as string)).join(', ')
             : '*'
         const { clause, values } = this.buildWhereClause(where)
-        const sql = \`SELECT \${fieldList} FROM \${this.tableName} \${clause} LIMIT 1\`
+        const sql = `SELECT ${fieldList} FROM ${this.tableName} ${clause} LIMIT 1`
 
         const result = await this.query(sql, ...values)
         return (result as T[])[0] || null
@@ -185,13 +185,13 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
         const { clause, values } = this.buildWhereClause(where)
 
         // 计算总数
-        const countSql = \`SELECT COUNT(id) as total FROM \${this.tableName} \${clause}\`
+        const countSql = `SELECT COUNT(id) as total FROM ${this.tableName} ${clause}`
         const [countResult] = await this.query(countSql, ...values) as any[]
         const total = countResult.total
 
         // 查询分页数据
         const offset = (pageNo - 1) * pageSize
-        const sql = \`SELECT \${fieldList} FROM \${this.tableName} \${clause} ORDER BY \${orderBy} LIMIT ? OFFSET ?\`
+        const sql = `SELECT ${fieldList} FROM ${this.tableName} ${clause} ORDER BY ${orderBy} LIMIT ? OFFSET ?`
         const records = await this.query(sql, ...values, pageSize, offset) as T[]
 
         return this.createPageResult(records, total, pageNo, pageSize)
@@ -199,12 +199,12 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
 
     async getPageBySql(sql: string, pageNo: number, pageSize: number, ...values: any[]) {
         // 计算总数
-        const [countResult] = await this.query(\`SELECT COUNT(*) as total FROM (\${sql}) as _count\`, ...values) as any[]
+        const [countResult] = await this.query(`SELECT COUNT(*) as total FROM (${sql}) as _count`, ...values) as any[]
         const total = countResult.total
 
         // 查询分页数据
         const offset = (pageNo - 1) * pageSize
-        const records = await this.query(\`\${sql} LIMIT ? OFFSET ?\`, ...values, pageSize, offset) as T[]
+        const records = await this.query(`${sql} LIMIT ? OFFSET ?`, ...values, pageSize, offset) as T[]
 
         return this.createPageResult(records, total, pageNo, pageSize)
     }
@@ -215,7 +215,7 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
      * @returns 执行结果
      */
     async updateAutoIncrement(value: number): Promise<ResultSetHeader> {
-        const sql = \`ALTER TABLE \${this.tableName} AUTO_INCREMENT = ?\`
+        const sql = `ALTER TABLE ${this.tableName} AUTO_INCREMENT = ?`
         const result = await this.query(sql, value)
         return result as ResultSetHeader
     }
@@ -242,17 +242,17 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
                     const field = camelToSnake(fieldName)
                     if (Array.isArray(value)) {
                         values.push(...value)
-                        return \`\${field} \${operator} (\${value.map(() => '?').join(', ')})\`
+                        return `${field} ${operator} (${value.map(() => '?').join(', ')})`
                     }
                     values.push(value)
-                    return \`\${field} \${operator} ?\`
+                    return `${field} ${operator} ?`
                 }
                 // 处理普通等于条件
                 const field = camelToSnake(key)
                 values.push(value)
-                return \`\${field} = ?\`
+                return `${field} = ?`
             })
-            clauses.push(\`(\${normalClauses.join(' AND ')})\`)
+            clauses.push(`(${normalClauses.join(' AND ')})`)
         }
 
         // 处理 OR 条件
@@ -264,21 +264,21 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
                     const field = camelToSnake(fieldName)
                     if (Array.isArray(value)) {
                         values.push(...value)
-                        return \`\${field} \${operator} (\${value.map(() => '?').join(', ')})\`
+                        return `${field} ${operator} (${value.map(() => '?').join(', ')})`
                     }
                     values.push(value)
-                    return \`\${field} \${operator} ?\`
+                    return `${field} ${operator} ?`
                 }
                 // 处理普通等于条件
                 const field = camelToSnake(key)
                 values.push(value)
-                return \`\${field} = ?\`
+                return `${field} = ?`
             })
-            clauses.push(\`(\${orClauses.join(' OR ')})\`)
+            clauses.push(`(${orClauses.join(' OR ')})`)
         }
 
         return {
-            clause: \`WHERE \${clauses.join(' OR ')}\`,
+            clause: `WHERE ${clauses.join(' OR ')}`,
             values
         }
     }
@@ -322,4 +322,4 @@ function camelObjToSnakeObj(camelKeyObject: Record<string, any>) {
         snakeKeyObject[camelToSnake(key)] = camelKeyObject[key]
     }
     return snakeKeyObject
-}`
+}

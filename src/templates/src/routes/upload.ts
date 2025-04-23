@@ -1,4 +1,4 @@
-export const uploadRouteTemplate = `import { Router } from 'express'
+import { Router } from 'express'
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname) // 提取扩展名
-        const newName = \`\${randomHash()}\${ext}\` // 自定义文件名
+        const newName = `${randomHash()}${ext}` // 自定义文件名
         cb(null, newName)
     }
 })
@@ -41,4 +41,4 @@ router.post('/', upload.single('file'),
     }
 )
 
-export default router`
+export default router

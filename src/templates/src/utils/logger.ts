@@ -1,4 +1,4 @@
-export const loggerTemplate = `import fs from 'fs'
+import fs from 'fs'
 import path from 'path'
 import dayjs from 'dayjs'
 
@@ -8,12 +8,12 @@ if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true })
 }
 
-const logFilePath = path.join(logDir, \`\${ dayjs().format('YYYY-MM-DD')}.log\`)
+const logFilePath = path.join(logDir, `${dayjs().format('YYYY-MM-DD')}.log`)
 
 // 日志格式化函数
 const formatLog = (level: string, message: string) => {
     const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
-    return \`\${ timestamp } [\${ level }]: \${ message }\`
+    return `${timestamp} [${level}]: ${message}`
 }
 
 // 日志类
@@ -28,7 +28,7 @@ class Logger {
         const logMessage = formatLog(level, message)
 
         // 写入日志文件
-        fs.appendFileSync(logFilePath, logMessage + '\\n')
+        fs.appendFileSync(logFilePath, logMessage + '\n')
 
         switch (level) {
             case 'log':
@@ -69,4 +69,4 @@ class Logger {
 // 创建并导出 logger 实例
 const logger = new Logger()
 
-export default logger`
+export default logger

@@ -1,4 +1,4 @@
-export const tempClearCronTemplate = `import fs from 'fs'
+import fs from 'fs'
 import path from 'path'
 import cron from 'node-cron'
 import logger from '@/utils/logger'
@@ -13,9 +13,9 @@ function clearTempDir() {
         const filePath = path.join(TEMP_PATH, file)
         try {
             fs.unlinkSync(filePath)
-            logger.success(\`[temp-cleaner] 删除文件：\${file}\`)
+            logger.success(`[temp-cleaner] 删除文件：${file}`)
         } catch (err) {
-            logger.error(\`[temp-cleaner] 删除失败：\${file}\`)
+            logger.error(`[temp-cleaner] 删除失败：${file}`)
         }
     }
 }
@@ -26,4 +26,3 @@ cron.schedule('0 * * * *', () => {
     clearTempDir()
     logger.log('[temp-cleaner] 清理完成')
 })
-`

@@ -1,4 +1,4 @@
-export const redisTemplate = `import Redis from 'ioredis'
+import Redis from 'ioredis'
 
 export const redis = new Redis({
     host: '127.0.0.1',
@@ -30,4 +30,4 @@ export async function get(key: string): Promise<string | null> {
  */
 export async function del(key: string) {
     await redis.del(key)
-}`
+}

@@ -1,4 +1,4 @@
-export const loadRoutesTemplate = `import type { Application } from 'express'
+import type { Application } from 'express'
 import path from 'path'
 import fs from 'fs'
 
@@ -9,7 +9,7 @@ const ROUTES_DIR = path.join(__dirname, 'routes')
 function loadRoute(routesDir: string, app: Application) {
     // 判断是否存在目录
     if (!fs.existsSync(routesDir)) {
-        console.cliError(\`\${ routesDir } 目录不存在\`)
+        console.cliError(`${routesDir} 目录不存在`)
         process.exit(1)
     }
 
@@ -36,10 +36,10 @@ function loadRoute(routesDir: string, app: Application) {
         const contextPath = process.env.CONTEXT_PATH + fullPath.replace(ROUTES_DIR, '')
             .replace('.ts', '')
             .replace('.js', '')
-            .replaceAll('\\\\', '/')
-        app.use(\`\${ contextPath }\`, route)
-        console.cliSuccess(\`\${ contextPath } 路由注册成功\`)
+            .replaceAll('\\', '/')
+        app.use(`${contextPath}`, route)
+        console.cliSuccess(`${contextPath} 路由注册成功`)
     })
 }
 
-export default (app: Application) => loadRoute(ROUTES_DIR, app)`
+export default (app: Application) => loadRoute(ROUTES_DIR, app)

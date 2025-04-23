@@ -1,4 +1,4 @@
-export const httpResponseTemplate = `import type Middleware from '@/types/middleware'
+import type Middleware from '@/types/middleware'
 
 class HttpResponse {
     code: number
@@ -32,4 +32,4 @@ module.exports = ((req, resp, next) => {
     }
 
     next()
-}) as Middleware`
+}) as Middleware

@@ -1,4 +1,4 @@
-export const baseMapperTypeTemplate = `import type { ResultSetHeader, PoolConnection } from 'mysql2/promise'
+import type { ResultSetHeader, PoolConnection } from 'mysql2/promise'
 
 type WhereOperator = '=' | '>' | '<' | '>=' | '<=' | '!=' | 'IN' | 'NOT IN' | 'LIKE' | 'NOT LIKE'
 
@@ -7,12 +7,12 @@ type WhereValue = string | number | boolean | null | (string | number)[]
 type WhereCondition<T> = {
     [K in keyof T]?: WhereValue
 } & {
-    [K in \`\${string & keyof T} \${WhereOperator}\`]?: WhereValue
+    [K in `${string & keyof T} ${WhereOperator}`]?: WhereValue
 } & {
     $or?: {
         [K in keyof T]?: WhereValue
     } & {
-        [K in \`\${string & keyof T} \${WhereOperator}\`]?: WhereValue
+        [K in `${string & keyof T} ${WhereOperator}`]?: WhereValue
     }
 }
 
@@ -43,4 +43,4 @@ interface IBaseMapper<T> {
 
     // 自增ID相关方法
     updateAutoIncrement(value: number): Promise<ResultSetHeader>
-} `
+}

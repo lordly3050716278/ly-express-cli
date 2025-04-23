@@ -1,4 +1,4 @@
-export const tsconfigTemplate = JSON.stringify({
+{
     "compilerOptions": {
         "target": "ES2024",
         "module": "CommonJS",
@@ -22,4 +22,4 @@ export const tsconfigTemplate = JSON.stringify({
     "exclude": [
         "node_modules"
     ]
-}, null, 2)
+}

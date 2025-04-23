@@ -1,4 +1,4 @@
-export const mysqlTemplate = `import type { TypeCastField } from 'mysql2'
+import type { TypeCastField } from 'mysql2'
 import mysql from 'mysql2/promise'
 import dayjs from 'dayjs'
 
@@ -19,4 +19,4 @@ export const pool = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0,
     typeCast
-})`
+})

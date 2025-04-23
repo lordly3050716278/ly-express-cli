@@ -1,4 +1,4 @@
-export const consoleTemplate = `import clc from 'cli-color'
+import clc from 'cli-color'
 
 // 定义颜色和样式
 const logLevelColors = {
@@ -30,7 +30,7 @@ const log = (level: keyof typeof logLevelColors, ...args: any[]) => {
         return color(arg)
     })
     // 打印时间戳和日志级别
-    const timestampLabel = color(\`\${getTimestamp()} [\${level.toUpperCase()}]\`)
+    const timestampLabel = color(`${getTimestamp()} [${level.toUpperCase()}]`)
     originalMethod(timestampLabel, ...processedArgs)
 }
 
@@ -38,4 +38,4 @@ const log = (level: keyof typeof logLevelColors, ...args: any[]) => {
 console.cliLog = (...args: any[]) => log('log', ...args)
 console.cliWarn = (...args: any[]) => log('warn', ...args)
 console.cliError = (...args: any[]) => log('error', ...args)
-console.cliSuccess = (...args: any[]) => log('success', ...args)`
+console.cliSuccess = (...args: any[]) => log('success', ...args)

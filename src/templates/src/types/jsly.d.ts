@@ -1,4 +1,4 @@
-export const jslyTypeTemplate = `declare module 'jsly' {
+declare module 'jsly' {
     /**
      * 生成随机的字符串
      */
@@ -17,4 +17,4 @@ export const jslyTypeTemplate = `declare module 'jsly' {
      * @param str 下划线格式的字符串
      */
     export function snakeToCamel(str: string): string
-}`
+}

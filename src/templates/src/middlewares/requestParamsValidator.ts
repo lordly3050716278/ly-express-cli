@@ -1,4 +1,4 @@
-export const requestParamsValidatorTemplate = `import type Middleware from '@/types/middleware'
+import type Middleware from '@/types/middleware'
 
 module.exports = ((req, resp, next) => {
     req.paramsValidator = function <T extends string>(...keys: T[]) {
@@ -9,7 +9,7 @@ module.exports = ((req, resp, next) => {
 
         for (const key of keys) {
             const value = params[key]
-            if (value === undefined) throw new Error(\`缺少参数 \${key}\`)
+            if (value === undefined) throw new Error(`缺少参数 ${key}`)
             valid[key] = value
         }
 
@@ -22,4 +22,4 @@ module.exports = ((req, resp, next) => {
     }
 
     next()
-}) as Middleware`
+}) as Middleware

@@ -1,11 +1,11 @@
-export const requestLoggerTemplate = `import type Middleware from '@/types/middleware'
+import type Middleware from '@/types/middleware'
 import logger from '@/utils/logger'
 
 module.exports = ((req, resp, next) => {
     const start = Date.now()
 
     // 请求开始时，记录日志
-    logger.log(\`Request started | Method: \${ req.method } | URL: \${ req.originalUrl } | Body: \${ JSON.stringify(req.body) } \`)
+    logger.log(`Request started | Method: ${req.method} | URL: ${req.originalUrl} | Body: ${JSON.stringify(req.body)} `)
 
     // 响应结束后，记录日志
     resp.on('finish', () => {
@@ -30,8 +30,8 @@ module.exports = ((req, resp, next) => {
         }
 
         // 记录响应日志
-        logger[logLevel](\`Request completed | Method: \${ req.method } | URL: \${ req.originalUrl } | Status: \${ resp.statusCode } | ResponseTime: \${ responseTime } ms | Body: \${ JSON.stringify(resp.body) }\`)
+        logger[logLevel](`Request completed | Method: ${req.method} | URL: ${req.originalUrl} | Status: ${resp.statusCode} | ResponseTime: ${responseTime} ms | Body: ${JSON.stringify(resp.body)}`)
     })
 
     next()
-}) as Middleware`
+}) as Middleware

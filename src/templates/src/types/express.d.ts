@@ -1,4 +1,4 @@
-export const expressTypeTemplate = `namespace Express {
+namespace Express {
     interface Request {
         /**
          * 请求参数校验器
@@ -38,4 +38,4 @@ export const expressTypeTemplate = `namespace Express {
         */
         authFail(error: Error): void
     }
-}`
+}
