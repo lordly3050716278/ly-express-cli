@@ -5,8 +5,8 @@ import fs from 'fs'
 // 路由目录
 const ROUTES_DIR = path.join(__dirname, 'routes')
 
-// 递归注册路由
-function loadRoute(routesDir: string, app: Application) {
+// 自动注册路由
+function autoRoute(routesDir: string, app: Application) {
     // 判断是否存在目录
     if (!fs.existsSync(routesDir)) {
         console.cliError(`${routesDir} 目录不存在`)
@@ -24,7 +24,7 @@ function loadRoute(routesDir: string, app: Application) {
 
         if (stat.isDirectory()) {
             // 若是子目录，递归加载
-            loadRoute(fullPath, app)
+            autoRoute(fullPath, app)
             return
         }
 
@@ -42,4 +42,4 @@ function loadRoute(routesDir: string, app: Application) {
     })
 }
 
-export default (app: Application) => loadRoute(ROUTES_DIR, app)
+module.exports = (app: Application) => autoRoute(ROUTES_DIR, app)

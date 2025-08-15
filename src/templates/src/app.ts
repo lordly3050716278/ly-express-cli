@@ -1,18 +1,24 @@
+import fs from 'fs'
+import http from 'http'
+import https from 'https'
 import express from 'express'
 import cors from 'cors'
-import loadRoutes from './loadRoutes'
 
 // 重写console的方法
 import './console'
 // 加载环境变量
 import './loadEnv'
 
-const app = express()
-
-console.cliLog('监听端口，开启服务')
-app.listen(process.env.PORT, () => {
-    console.cliSuccess(`服务已运行在 ${process.env.PORT} 端口`)
+// 全局错误捕获
+process.on('uncaughtException', (err) => {
+    console.cliError('未捕获的异常（uncaughtException）:', err)
 })
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.cliError('未处理的Promise拒绝（unhandledRejection）:', reason)
+})
+
+const app = express()
 
 console.cliLog('跨域处理')
 app.use(cors())
@@ -29,14 +35,37 @@ app.use(process.env.ASSETS_CONTEXT_PATH, require('@/middlewares/refer'), express
 console.cliLog('临时文件服务')
 app.use(process.env.TEMP_CONTEXT_PATH, express.static(process.env.TEMP_PATH))
 
-// 使用日志中间件
-app.use(require('@/middlewares/requestLogger'))
-// 使用json返回值中间件
+// 使用中间件
 app.use(require('@/middlewares/httpResponse'))
-app.use(require('@/middlewares/requestParamsValidator'))
+app.use(require('@/middlewares/paramsValidator'))
 
 console.cliLog('自动注册路由')
-loadRoutes(app)
+require('./autoRoutes')(app)
 
 console.cliLog('启动定时任务')
 require('@/cron')
+
+
+// --------------------- 启动 HTTP/HTTPS ---------------------
+const BASE = process.env.BASE
+const PORT = process.env.PORT
+const isDev = process.env.NODE_ENV === 'development'
+let server
+
+if (isDev) {
+    // 开发环境直接 HTTP
+    server = http.createServer(app)
+    server.listen(PORT, () => {
+        console.cliSuccess(`开发环境服务已运行在 ${BASE}:${PORT}`)
+    })
+} else {
+    // 生产环境使用 HTTPS
+    const options = {
+        key: fs.readFileSync('privkey.pem 路径'),
+        cert: fs.readFileSync('fullchain.pem 路径'),
+    }
+    server = https.createServer(options, app)
+    server.listen(PORT, () => {
+        console.cliSuccess(`生产环境服务已运行在 ${BASE}:${PORT}`)
+    })
+}
