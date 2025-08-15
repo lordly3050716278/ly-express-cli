@@ -2,7 +2,10 @@ import path from 'path'
 import dotenv from 'dotenv'
 
 console.cliLog('开始加载环境变量')
-const CURR_ENV = process.env.NODE_ENV ?? 'development'
+if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = 'development'
+}
+const CURR_ENV = process.env.NODE_ENV
 console.cliLog(`当前环境 ${CURR_ENV}`)
 
 const baseEnvPath = path.join(__dirname, '..', `.env`)
