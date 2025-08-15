@@ -7,7 +7,7 @@ import cors from 'cors'
 // 重写console的方法
 import './console'
 // 加载环境变量
-import './loadEnv'
+import './env'
 
 // 全局错误捕获
 process.on('uncaughtException', (err) => {
