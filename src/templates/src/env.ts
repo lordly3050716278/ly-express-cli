@@ -13,20 +13,19 @@ const envPath = path.join(__dirname, '..', `.env.${CURR_ENV}`)
 
 try {
     dotenv.config({ path: baseEnvPath })
-    console.cliSuccess(`加载 [${baseEnvPath}] 成功`)
-
     dotenv.config({ path: envPath })
-    console.cliSuccess(`加载 [${envPath}] 成功`)
 
-    const { HOST, PORT, CONTEXT_PATH } = process.env
+    const { BASE, PORT, CONTEXT_PATH } = process.env
     const ASSETS_CONTEXT_PATH = CONTEXT_PATH + '/assets'
     process.env.ASSETS_CONTEXT_PATH = ASSETS_CONTEXT_PATH
-    process.env.ASSETS_URL = `http://${HOST}:${PORT}${ASSETS_CONTEXT_PATH}`
+    process.env.ASSETS_URL = `${BASE}:${PORT}${ASSETS_CONTEXT_PATH}`
 
     process.env.TEMP_PATH = path.join(process.cwd(), 'temp')
     const TEMP_CONTEXT_PATH = CONTEXT_PATH + '/temp'
     process.env.TEMP_CONTEXT_PATH = TEMP_CONTEXT_PATH
-    process.env.TEMP_URL = `http://${HOST}:${PORT}${TEMP_CONTEXT_PATH}`
+    process.env.TEMP_URL = `${BASE}:${PORT}${TEMP_CONTEXT_PATH}`
+
+    console.cliSuccess(`加载 [${envPath}] 成功`)
 } catch (error) {
     console.cliError(`加载 [${envPath}] 失败: ${error}`)
     process.exit(1)
