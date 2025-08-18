@@ -16,6 +16,11 @@ type WhereCondition<T> = {
     }
 }
 
+type ListConfig = {
+    order?: string
+    limit?: number
+}
+
 interface PageResult<T> {
     records: T[]
     pageNo: number
@@ -29,11 +34,14 @@ interface IBaseMapper<T> {
     query(sql: string, ...values: any[]): Promise<T[] | ResultSetHeader>
     insert(entity: Partial<T>): Promise<ResultSetHeader>
     delete(where?: WhereCondition<T>): Promise<ResultSetHeader>
-    update(id: number, data: Partial<T>): Promise<ResultSetHeader>
-    getList(where?: WhereCondition<T>, orderBy?: string, ...fields: (keyof T)[]): Promise<T[]>
+    updateById(id: number, data: Partial<T>): Promise<ResultSetHeader>
+    updateByWhere(where: WhereCondition<T>, data: Partial<T>): Promise<ResultSetHeader>
+    getList(where?: WhereCondition<T>, config?: ListConfig, ...fields: (keyof T)[]): Promise<T[]>
     getOne(where: WhereCondition<T>, ...fields: (keyof T)[]): Promise<T | null>
-    getPage(pageNo: number, pageSize: number, where?: WhereCondition<T>, orderBy?: string, ...fields: (keyof T)[]): Promise<PageResult<T>>
-    getPageBySql(sql: string, pageNo: number, pageSize: number, ...values: any[]): Promise<PageResult<T>>
+    count(where?: WhereCondition<T>): Promise<number>
+    increase(where: WhereCondition<T>, ...fields: (keyof T)[]): Promise<ResultSetHeader>
+    decrease(where: WhereCondition<T>, ...fields: (keyof T)[]): Promise<ResultSetHeader>
+    updateFieldsByStep(where: WhereCondition<T>, fields: (keyof T)[], step: number): Promise<ResultSetHeader>
 
     // 事务相关方法
     beginTransaction(): Promise<PoolConnection>
@@ -43,4 +51,4 @@ interface IBaseMapper<T> {
 
     // 自增ID相关方法
     updateAutoIncrement(value: number): Promise<ResultSetHeader>
-}
+} 

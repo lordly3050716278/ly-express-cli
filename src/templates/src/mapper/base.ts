@@ -1,9 +1,7 @@
 import type { PoolConnection, ResultSetHeader } from 'mysql2/promise'
-import type { IBaseMapper, WhereCondition } from '@/types/baseMapper'
+import type { IBaseMapper, WhereCondition, ListConfig } from '@/types/baseMapper'
 import { pool } from '@/utils/mysql'
-import logger from '@/utils/logger'
 import { snakeToCamel, camelToSnake } from 'jsly'
-import { buildAssetsUrl } from '@/utils/fs'
 
 export abstract class BaseMapper<T> implements IBaseMapper<T> {
     abstract tableName: string
@@ -106,7 +104,6 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
         // 如果已经在事务中，使用事务连接
         if (BaseMapper.transactionConn) {
             try {
-                logger.log(`${sql} [${values}]`)
                 const [result, fields] = await BaseMapper.transactionConn.query(sql, values)
                 if (!Array.isArray(result)) return result as ResultSetHeader
                 return result.map(snakeObjToCamelObj) as T[]
@@ -119,7 +116,6 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
         await this.connect()
         if (!this.#conn) return []
         try {
-            logger.log(`${sql} [${values}]`)
             const [result, fields] = await this.#conn.query(sql, values)
             if (!Array.isArray(result)) return result as ResultSetHeader
             return result.map(snakeObjToCamelObj) as T[]
@@ -144,7 +140,7 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
         return result as ResultSetHeader
     }
 
-    async update(id: number, data: Partial<T>) {
+    async updateById(id: number, data: Partial<T>) {
         const snakeData = camelObjToSnakeObj(data)
         const setClause = Object.keys(snakeData)
             .map(key => `${key} = ?`)
@@ -156,57 +152,75 @@ export abstract class BaseMapper<T> implements IBaseMapper<T> {
         return result as ResultSetHeader
     }
 
-    async getList(where?: WhereCondition<T>, orderBy: string = 'id DESC', ...fields: (keyof T)[]) {
-        const fieldList = fields.length > 0
-            ? fields.map(field => camelToSnake(field as string)).join(', ')
-            : '*'
+    async updateByWhere(where: WhereCondition<T>, data: Partial<T>): Promise<ResultSetHeader> {
+        const snakeData = camelObjToSnakeObj(data)
+        const setClause = Object.keys(snakeData)
+            .map(key => `${key} = ?`)
+            .join(', ')
         const { clause, values } = this.buildWhereClause(where)
-        const sql = `SELECT ${fieldList} FROM ${this.tableName} ${clause} ORDER BY ${orderBy}`
+        const sql = `UPDATE ${this.tableName} SET ${setClause} ${clause}`
+        const updateValues = [...Object.values(data), ...values]
+
+        const result = await this.query(sql, ...updateValues)
+        return result as ResultSetHeader
+    }
+
+    async getList(
+        where?: WhereCondition<T>,
+        config: ListConfig = {
+            order: 'id DESC'
+        },
+        ...fields: (keyof T)[]) {
+        let fieldList = '*'
+        if (fields.length > 0) {
+            fieldList = fields.map(field => camelToSnake(field as string)).join(', ')
+        }
+
+        const { clause: whereClause, values } = this.buildWhereClause(where)
+        let sql = `SELECT ${fieldList} FROM ${this.tableName} ${whereClause}`
+
+        config.order && (sql += ` ORDER BY ${config.order}`)
+        config.limit && (sql += ` LIMIT ${config.limit}`)
 
         const result = await this.query(sql, ...values)
         return result as T[]
     }
 
-    async getOne(where: WhereCondition<T>, ...fields: (keyof T)[]) {
-        const fieldList = fields.length > 0
-            ? fields.map(field => camelToSnake(field as string)).join(', ')
-            : '*'
+    async getOne(where?: WhereCondition<T>, ...fields: (keyof T)[]) {
+        const result = await this.getList(where, undefined, ...fields)
+        return result[0] || null
+    }
+
+    async count(where?: WhereCondition<T>): Promise<number> {
         const { clause, values } = this.buildWhereClause(where)
-        const sql = `SELECT ${fieldList} FROM ${this.tableName} ${clause} LIMIT 1`
+        const sql = `SELECT COUNT(*) as total FROM ${this.tableName} ${clause}`
+        const [result] = await this.query(sql, ...values) as any[]
+        return result.total
+    }
+
+    async increase(where: WhereCondition<T>, ...fields: (keyof T)[]): Promise<ResultSetHeader> {
+        return this.updateFieldsByStep(where, fields, 1)
+    }
+
+    async decrease(where: WhereCondition<T>, ...fields: (keyof T)[]): Promise<ResultSetHeader> {
+        return this.updateFieldsByStep(where, fields, -1)
+    }
+
+    async updateFieldsByStep(where: WhereCondition<T>, fields: (keyof T)[], step: number): Promise<ResultSetHeader> {
+        if (!fields.length) throw new Error('必须指定至少一个字段')
+
+        const setClause = fields
+            .map(field => {
+                const col = camelToSnake(field as string)
+                return `${col} = ${col} ${step > 0 ? '+' : '-'} ${Math.abs(step)}`
+            })
+            .join(', ')
+
+        const { clause, values } = this.buildWhereClause(where)
+        const sql = `UPDATE ${this.tableName} SET ${setClause} ${clause}`
 
         const result = await this.query(sql, ...values)
-        return (result as T[])[0] || null
-    }
-
-    async getPage(pageNo: number, pageSize: number, where?: WhereCondition<T>, orderBy: string = 'id DESC', ...fields: (keyof T)[]) {
-        const fieldList = fields.length > 0
-            ? fields.map(field => camelToSnake(field as string)).join(', ')
-            : '*'
-        const { clause, values } = this.buildWhereClause(where)
-
-        // 计算总数
-        const countSql = `SELECT COUNT(id) as total FROM ${this.tableName} ${clause}`
-        const [countResult] = await this.query(countSql, ...values) as any[]
-        const total = countResult.total
-
-        // 查询分页数据
-        const offset = (pageNo - 1) * pageSize
-        const sql = `SELECT ${fieldList} FROM ${this.tableName} ${clause} ORDER BY ${orderBy} LIMIT ? OFFSET ?`
-        const records = await this.query(sql, ...values, pageSize, offset) as T[]
-
-        return this.createPageResult(records, total, pageNo, pageSize)
-    }
-
-    async getPageBySql(sql: string, pageNo: number, pageSize: number, ...values: any[]) {
-        // 计算总数
-        const [countResult] = await this.query(`SELECT COUNT(*) as total FROM (${sql}) as _count`, ...values) as any[]
-        const total = countResult.total
-
-        // 查询分页数据
-        const offset = (pageNo - 1) * pageSize
-        const records = await this.query(`${sql} LIMIT ? OFFSET ?`, ...values, pageSize, offset) as T[]
-
-        return this.createPageResult(records, total, pageNo, pageSize)
+        return result as ResultSetHeader
     }
 
     /**
